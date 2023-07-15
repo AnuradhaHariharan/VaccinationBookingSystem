@@ -1,6 +1,8 @@
 package BookMyVax.BookMyVax.Controller;
 
 
+import BookMyVax.BookMyVax.Dto.RequestDto.AddPersonRequestDto;
+import BookMyVax.BookMyVax.Dto.ResponseDto.AddPersonResponseDto;
 import BookMyVax.BookMyVax.Entity.Person;
 import BookMyVax.BookMyVax.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,24 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
-    @PostMapping("/add")
-    public ResponseEntity addPerson(@RequestBody Person person){
+   // @PostMapping("/addPerson")
+    //public ResponseEntity addPerson(@RequestBody Person person){
+ //  try {
+   //    Person personResponse = personService.addPerson(person);
+     //  return new ResponseEntity(personResponse, HttpStatus.ACCEPTED);
+ //  }catch (Exception e){
+   //    return new ResponseEntity("Email Already Exists",HttpStatus.BAD_REQUEST);
+   //}
+   // }
+    @PostMapping("/add_person")
+    public ResponseEntity addPerson(@RequestBody AddPersonRequestDto addPersonRequestDto){
         try{
-            Person personResponse = personService.addPerson(person);
-            return new ResponseEntity(personResponse, HttpStatus.CREATED);
+            AddPersonResponseDto personResponseDto=personService.addperson(addPersonRequestDto);
+            return new ResponseEntity(personResponseDto,HttpStatus.ACCEPTED);
         }
-        catch (Exception e){
-            return new ResponseEntity("Email already exists",HttpStatus.BAD_REQUEST);
+        catch(Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+
     }
 }
