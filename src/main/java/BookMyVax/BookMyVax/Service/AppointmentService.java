@@ -13,6 +13,8 @@ import BookMyVax.BookMyVax.Repository.AppointmentRepository;
 import BookMyVax.BookMyVax.Repository.DoctorRepository;
 import BookMyVax.BookMyVax.Repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
@@ -27,6 +29,8 @@ public class AppointmentService {
     DoctorRepository doctorRepository;
     @Autowired
     AppointmentRepository appointmentRepository;
+    @Autowired
+    JavaMailSender javaMailSender;
     public AppointmentResponseDto BookAppointment(AppointmentBookingRequestDto appointmentBookingRequestDto) {
         Optional<Person> optionalPerson=personRepository.findById(appointmentBookingRequestDto.getPersonId());
         if(optionalPerson==null){
@@ -49,7 +53,17 @@ public class AppointmentService {
        Doctor savedDoctor= doctorRepository.save(doctor);
         Person savedPerson=personRepository.save(person);
 
+
         VaccinationCenter center=savedDoctor.getVaccinationCenter();
+        String message=savedPerson.getName()+" Your Appointment has been booked with Dr."+savedDoctor.getName()+".in "+center.getAddress()+" at "+appointments.getAppointmentDate()+" .Please be on time ";
+        SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+        simpleMailMessage.setFrom("springbootprojectjava@gmail.com");
+        simpleMailMessage.setTo(savedPerson.getEmailId());
+        simpleMailMessage.setSubject("Vaccination Booking");
+        simpleMailMessage.setText(message);
+        javaMailSender.send(simpleMailMessage);
+
+
         CenterResponseDto centerResponseDto=new CenterResponseDto();
         centerResponseDto.setName(center.getName());
         centerResponseDto.setCenterType(center.getCenterType());
