@@ -2,6 +2,7 @@ package BookMyVax.BookMyVax.Controller;
 
 
 import BookMyVax.BookMyVax.Dto.RequestDto.BookDose1RequestDto;
+import BookMyVax.BookMyVax.Dto.RequestDto.BookDose2RequestDto;
 import BookMyVax.BookMyVax.Entity.Dose;
 import BookMyVax.BookMyVax.Enum.DoseType;
 import BookMyVax.BookMyVax.Service.DoseService;
@@ -36,5 +37,15 @@ public class DoseController {
             }
 
     }
+    @PostMapping("/get_dose2")
+    public ResponseEntity getDose2(@RequestBody BookDose1RequestDto bookDose1RequestDto){
+        try{
+        Dose dose2=doseService.getDose2(bookDose1RequestDto);
+        return new ResponseEntity(bookDose1RequestDto,HttpStatus.ACCEPTED);
+    }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
     }
 
